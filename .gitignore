@@ -44,3 +44,4 @@ packages/
 *.bak
 *.swp
 *~
+queries.ipynb
