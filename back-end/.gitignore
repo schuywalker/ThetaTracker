@@ -1,5 +1,5 @@
 /secrets/*
-# /.vscode/*
+/.vscode/*
 
 # Binaries and build files
 bin/
