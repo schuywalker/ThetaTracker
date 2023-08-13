@@ -3,7 +3,9 @@ using MongoDB.Driver;
 using MongoDB.Bson;
 using API.Repositories;
 using API.Services;
-
+using System.Globalization;
+using API.lib.dateManip;
+using API.Models;
 
 namespace API;
 
@@ -14,41 +16,22 @@ class Program
         var connectionString = "mongodb://localhost:27017";
         var mongoClient = new MongoClient(connectionString);
         var database = mongoClient.GetDatabase("option_chains");
-        // var collection = mongoClient.GetDatabase("option_chains").GetCollection<BsonDocument>("AAPL");
+
 
         var repo = new OptionContractRepository(database, "PLTR");
         var service = new OptionContractsService(repo);
 
-        var document = service.GetOptionContracts("PLTR", "PLTR230804C00015000", 1690778143);
-        Console.WriteLine(document);
 
-        Console.WriteLine("test");
+        DateTime date = DateTime.ParseExact("2023-07-30", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        DateTime expirationDate = DateTime.ParseExact("2023-08-11", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        // List<OptionContract> documents = service.GetOptionContracts("PLTR", 15, date, lib.OptionType.CALL, expirationDate);
+        List<OptionContract> documents = service.GetOptionContracts("PLTR", 15, date, lib.OptionType.CALL, null);
+        Console.WriteLine(documents.Count);
+        foreach (var doc in documents)
+        {
+            Console.WriteLine($"bid: {doc.bid} ask: {doc.ask} expiration: {dateManip.TimestampToDateTime(doc.expirationDateTS)}");
+        }
 
-        // // var filter = Builders<BsonDocument>.Filter.Eq("contractSymbol", "AAPL230721C00055000");
-        // var filter = Builders<BsonDocument>.Filter.Eq("contractSymbol", "AAPL230721C00055000");
-        // // var filter = Builders<BsonDocument>.Filter.Gt("openInterest", 10000);
-        // // var document = collection.Find(filter).First();
-        // var document = collection.Find(filter).ToList();
-        // // Console.WriteLine(document);
-        // foreach (var doc in document)
-        // {
-        //     Console.WriteLine(doc["lastPrice"]);
-        // }
 
     }
 }
-
-
-
-
-// // var filter = Builders<BsonDocument>.Filter.Eq("contractSymbol", "AAPL230721C00055000");
-// var filter = Builders<BsonDocument>.Filter.Eq("contractSymbol", "AAPL230721C00055000");
-// // var filter = Builders<BsonDocument>.Filter.Gt("openInterest", 10000);
-// // var document = collection.Find(filter).First();
-// var document = collection.Find(filter).ToList();
-// // Console.WriteLine(document);
-// foreach (var doc in document)
-// {
-//     Console.WriteLine(doc["lastPrice"]);
-// }
-
