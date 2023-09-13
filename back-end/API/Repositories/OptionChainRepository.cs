@@ -13,16 +13,16 @@ public class OptionChainRepository : IOptionChainRepository
         _collection = database.GetCollection<OptionChain>(collectionName);
     }
 
-    public OptionChain GetOptionChainByDay(string ticker, long date)
+    public OptionChain GetOptionChainByDay(long date)
     {
         throw new NotImplementedException();
     }
-    public OptionChain GetOptionChainByDay(string ticker, DateTime date)
+    public OptionChain GetOptionChainByDay(DateTime date)
     {
-        var dayRange = dateManip.GetDayRange((DateTime)date);
-        return GetOptionChainByDayRange(ticker, dayRange.StartOfDay, dayRange.EndOfDay);
+        (long? startQueryTS, long? endQueryTS) = DateManip.GetDayRange((DateTime)date, (DateTime)date);
+        return GetOptionChainByDayRange(startQueryTS, endQueryTS);
     }
-    public OptionChain GetOptionChainByDayRange(string ticker, long start, long end)
+    public OptionChain GetOptionChainByDayRange(long? start, long? end)
     {
         throw new NotImplementedException();
     }

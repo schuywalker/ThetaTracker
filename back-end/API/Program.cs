@@ -14,22 +14,25 @@ class Program
     static void Main(string[] args)
     {
         var connectionString = "mongodb://localhost:27017";
+
         var mongoClient = new MongoClient(connectionString);
         var database = mongoClient.GetDatabase("option_chains");
 
+        string ticker = "AI";
 
-        var repo = new OptionContractRepository(database, "PLTR");
+        var repo = new OptionContractRepository(database, ticker);
         var service = new OptionContractsService(repo);
 
 
-        DateTime date = DateTime.ParseExact("2023-07-30", "yyyy-MM-dd", CultureInfo.InvariantCulture);
-        DateTime expirationDate = DateTime.ParseExact("2023-08-11", "yyyy-MM-dd", CultureInfo.InvariantCulture);
-        // List<OptionContract> documents = service.GetOptionContracts("PLTR", 15, date, lib.OptionType.CALL, expirationDate);
-        List<OptionContract> documents = service.GetOptionContracts("PLTR", 15, date, lib.OptionType.CALL, null);
+
+
+        DateTime date = DateTime.ParseExact("2023-08-11", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        DateTime expirationDate = DateTime.ParseExact("2023-08-18", "yyyy-MM-dd", CultureInfo.InvariantCulture);
+        List<OptionContract> documents = service.GetOptionContracts(35, date, date.AddDays(5), lib.OptionType.CALL, null, date.AddDays(15));
         Console.WriteLine(documents.Count);
         foreach (var doc in documents)
         {
-            Console.WriteLine($"bid: {doc.bid} ask: {doc.ask} expiration: {dateManip.TimestampToDateTime(doc.expirationDateTS)}");
+            Console.WriteLine($"bid: {doc.bid} ask: {doc.ask} expiration: {DateManip.TimestampToDateTime(doc.expirationDateTS)}");
         }
 
 

@@ -15,20 +15,20 @@ public class OptionContractsService : IOptionContractsService
         _repository = repository;
 
 
-    public OptionContract GetOptionContracts(string ticker, string contractSymbol, long createdTS)
+    public OptionContract GetOptionContracts(string contractSymbol, long createdTS)
     {
-        return _repository.GetOptionContracts(ticker, contractSymbol, createdTS);
+        return _repository.GetOptionContracts(contractSymbol, createdTS);
     }
-    public OptionContract GetOptionContracts(string ticker, double strike, long createdTS) // add CP
+    public OptionContract GetOptionContracts(double strike, long createdTS) // add CP
     {
-        return _repository.GetOptionContracts(ticker, strike, createdTS);
+        return _repository.GetOptionContracts(strike, createdTS);
     }
 
-    public List<OptionContract> GetOptionContracts(string ticker, double strike, DateTime date, OptionType cp, DateTime? expirationDate)
+    public List<OptionContract> GetOptionContracts(double strike, DateTime? queryDateStart, DateTime? queryDateEnd, OptionType cp, DateTime? expirationDateStart, DateTime? expirationDateEnd)
     {
-        (long start, long end) = dateManip.GetDayRange(date);
-        (long? expStart, long? expEnd) = (expirationDate != null) ? dateManip.GetDayRange((DateTime)expirationDate) : ((long?)null, (long?)null);
-        return _repository.GetOptionContracts(ticker, strike, start, end, cp, expStart, expEnd);
+        (long? startQueryTS, long? endQueryTS) = DateManip.GetDayRange(queryDateStart, queryDateEnd);
+        (long? expStartTS, long? expEndTS) = DateManip.GetDayRange(expirationDateStart, expirationDateEnd);
+        return _repository.GetOptionContracts(strike, startQueryTS, endQueryTS, cp, expStartTS, expEndTS);
     }
 
 }
