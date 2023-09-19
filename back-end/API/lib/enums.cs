@@ -4,6 +4,7 @@ public enum OptionType
 {
     CALL,
     PUT,
+    BOTH,
 }
 public static class OptionTypeHelper
 {

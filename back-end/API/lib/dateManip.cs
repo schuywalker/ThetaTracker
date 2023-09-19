@@ -11,18 +11,6 @@ public class DateManip
     }
     public static (long? startQueryTS, long? endQueryTS) GetDayRange(DateTime? firstDay, DateTime? lastDay)
     {
-        /*
-        null firstDay == (0,:)
-        null lastDay == (:, lastDay)
-        firstDay gets first milli of that day
-        lastDay get last milli of that day
-        for single day, caller must enter same day for firstDay and lastDay
-
-
-        
-        Date instead of DateTime params??
-
-        */
         DateTime epoch = new(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         long? startingTS;
         long? endingTS;
@@ -36,7 +24,7 @@ public class DateManip
         }
         else
         {
-            startOfRange = firstDay.Value.Date;
+            startOfRange = firstDay.Value.Date; // Value works on nullable DateTime
             timeSpan = startOfRange.ToUniversalTime() - epoch;
             startingTS = (long)timeSpan.TotalSeconds;
         }
@@ -47,7 +35,7 @@ public class DateManip
         }
         else
         {
-            endOfRange = lastDay.Value.Date.AddSeconds(86399); // One second less than a full day
+            endOfRange = lastDay.Value.Date.AddSeconds(86399); // full day - 1 second
             timeSpan = endOfRange.ToUniversalTime() - epoch;
             endingTS = (long)timeSpan.TotalSeconds;
         }
